@@ -1,0 +1,202 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f5f9fc;
+  color: #1a1a1a;
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(to right, #003973, #e5e5be); /* Deep ocean to gold */
+  color: #fff;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.cta-button {
+  background-color: #ffd700;
+  color: #003973;
+  padding: 12px 24px;
+  border: none;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+  background-color: #ffc400;
+}
+
+/* Featured Voyages */
+.featured-voyages {
+  padding: 60px 20px;
+  background-color: #ffffff;
+  text-align: center;
+}
+
+.featured-voyages h2 {
+  font-size: 2rem;
+  margin-bottom: 40px;
+}
+
+.voyage-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Benefits Section */
+.benefits {
+  padding: 60px 20px;
+  background-color: #eef3f8;
+  text-align: center;
+}
+
+.benefits h2 {
+  font-size: 2rem;
+  margin-bottom: 40px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.benefit-card {
+  background-color: #72c1c9;
+  padding: 30px 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-5px);
+}
+
+.benefit-card img {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 15px;
+}
+
+.benefit-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #003973;
+}
+
+.benefit-card p {
+  font-size: 0.95rem;
+  color: #333;
+}
+.featured-voyages {
+  padding: 60px 20px;
+  background: linear-gradient(to right, #e0f7fa, #ffffff);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  margin: 40px auto;
+  max-width: 1200px;
+}
+
+.featured-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.featured-voyages h2 {
+  font-size: 2.5rem;
+  color: #00704A;
+  margin-bottom: 10px;
+}
+
+.featured-subtext {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.voyage-list {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+
+/* Featured Voyages */
+.featured-voyages {
+  padding: 3rem 0;
+  background: #f8f9fa;
+}
+
+.voyage-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.voyage-card {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.voyage-card:hover {
+  transform: translateY(-5px);
+}
+
+.voyage-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.voyage-caption {
+  padding: 1.5rem;
+  background: white;
+}
+
+.voyage-caption h3 {
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.voyage-caption p {
+  color: #7f8c8d;
+  margin-bottom: 1rem;
+}
+
+.btn-small {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #3498db;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.btn-small:hover {
+  background: #2980b9;
+}
+
+
+
+
+

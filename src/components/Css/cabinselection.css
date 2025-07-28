@@ -1,0 +1,64 @@
+.cabin-selection {
+    padding: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .cabin-selection h3 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  .cabin-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .cabin-card {
+    background-color: #f5f9ff;
+    border: 2px solid #3498db;
+    border-radius: 12px;
+    padding: 20px;
+    width: 220px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+  
+  .cabin-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  .cabin-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #2980b9;
+  }
+  
+  .cabin-card p {
+    margin: 5px 0;
+    color: #444;
+  }
+  
+  .select-cabin {
+    margin-top: 10px;
+    padding: 10px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .select-cabin:hover {
+    background-color: #2980b9;
+  }
+  

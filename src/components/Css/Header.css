@@ -1,0 +1,63 @@
+/* Header.css */
+
+header {
+    background-color: #003973;
+    padding: 15px 30px;
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .logo a {
+    color: #ffd700;
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+  }
+  
+  nav ul li a:hover {
+    color: #ffd700;
+  }
+  
+  nav ul li button {
+    background: none;
+    border: 1px solid #ffd700;
+    color: #ffd700;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  nav ul li button:hover {
+    background-color: #ffd700;
+    color: #003973;
+  }
+  

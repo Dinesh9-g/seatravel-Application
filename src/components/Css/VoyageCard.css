@@ -1,0 +1,68 @@
+/* VoyageCard.css */
+
+.voyage-card {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+    max-width: 340px;
+  }
+  
+  .voyage-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .voyage-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .voyage-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .voyage-info h3 {
+    font-size: 1.3rem;
+    color: #003973;
+    margin-bottom: 5px;
+  }
+  
+  .voyage-info p {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.4;
+    margin: 0;
+  }
+  
+  .voyage-price {
+    color: #d4af37;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 8px;
+  }
+  
+  .cta-button {
+    margin-top: 10px;
+    display: inline-block;
+    background-color: #003973;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    text-align: center;
+  }
+  
+  .cta-button:hover {
+    background-color: #002452;
+  }
+  
