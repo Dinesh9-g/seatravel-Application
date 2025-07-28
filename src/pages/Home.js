@@ -8,7 +8,7 @@ import image3 from '../Images/rock-band.jpg';
 import image4 from '../Images/customer.jpg';
 import Image5 from '../Images/speed-boat-andaman.jpg';
 import Image6 from '../Images/watching-dolphins-swim.jpg';
-import Image8 from '../Images/yacht-sea-sunset.jpg';
+import Image8 from '../Images/generated-boat-picture.jpg';
 import Lottie from "lottie-react";
 import anime from "../Images/ship is sailing.json";
 
