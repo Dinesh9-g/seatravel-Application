@@ -26,7 +26,9 @@ function App() {
     const storedUsers = JSON.parse(localStorage.getItem('users')) || initialUsers;
     const storedCurrentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-    setVoyages(storedVoyages);
+    
+    setVoyages(initialVoyages);
+    console.log("voyages",voyages);
     setBookings(storedBookings);
     setUsers(storedUsers);
     setCurrentUser(storedCurrentUser);

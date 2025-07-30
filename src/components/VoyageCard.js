@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import '../components/Css/VoyageCard.css';
+
+
 const VoyageCard = ({ voyage }) => {
   return (
     <div className="voyage-card">
@@ -10,7 +12,7 @@ const VoyageCard = ({ voyage }) => {
         <p><strong>Departs:</strong> {new Date(voyage.departure).toLocaleDateString()}</p>
         <p><strong>Duration:</strong> {voyage.duration}</p>
         <p className="voyage-price">From ${voyage.price}</p>
-        <Link to={`/booking?voyage=${voyage.id}`} className="cta-button">Book Now</Link>
+        <Link to={`/bookingsteps?voyage=${voyage.id}`} className="cta-button">Book Now</Link>
       </div>
     </div>
   );

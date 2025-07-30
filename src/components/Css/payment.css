@@ -99,3 +99,11 @@ select:focus {
 .payment-placeholder button:hover {
   background-color: #1b343f;
 }
+
+.payment-success {
+  padding: 2rem;
+  background-color: #e7ffe7;
+  border: 2px solid #28a745;
+  border-radius: 10px;
+  text-align: center;
+}

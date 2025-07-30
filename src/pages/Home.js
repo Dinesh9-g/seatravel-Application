@@ -20,7 +20,7 @@ const Home = ({ voyages }) => {
       image: Image5,
       title: "Andaman Adventure",
       duration: "7 nights",
-      price: "$999",
+      price: "$1000",
       link: "/voyages"
     },
     {
@@ -28,7 +28,7 @@ const Home = ({ voyages }) => {
       image: Image6,
       title: "Dolphin Discovery",
       duration: "5 nights",
-      price: "$799",
+      price: "$2000",
       link: "/voyages"
     },
     {
@@ -36,7 +36,7 @@ const Home = ({ voyages }) => {
       image: Image8,
       title: "Sunset Luxury Cruise",
       duration: "3 nights",
-      price: "$1299",
+      price: "$3000",
       link: "/voyages"
     }
   ];
@@ -75,7 +75,7 @@ const Home = ({ voyages }) => {
         </div>
       </section>
 
-      <section className="popular-voyages">
+      {/* <section className="popular-voyages">
         <h2>Popular Voyages</h2>
         <div className="voyage-list">
           {featuredVoyages.map(voyage => (
@@ -83,7 +83,7 @@ const Home = ({ voyages }) => {
           ))}
         </div>
         <Link to="/voyages" className="cta-button secondary">View All Voyages</Link>
-      </section>
+      </section> */}
 
       <section className="benefits">
         <h2>Why Choose Us</h2>

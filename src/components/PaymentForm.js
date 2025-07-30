@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import '../components/Css/payment.css';
-const PaymentForm = ({ voyage, cabin, passengerCount, onSubmit, onBack }) => {
+const PaymentForm = ({ voyages, cabin, passengerCount, onSubmit, onBack,loginUser }) => {
   const [paymentMode, setPaymentMode] = useState('card');
+  const [success, setSuccess] = useState(false); 
   const [paymentData, setPaymentData] = useState({
     cardName: '',
     cardNumber: '',
@@ -10,7 +11,7 @@ const PaymentForm = ({ voyage, cabin, passengerCount, onSubmit, onBack }) => {
     upiId: ''
   });
 
-  if (!voyage || !cabin || typeof cabin.price !== 'number') {
+  if ( !voyages) {
     return (
       <div className="payment-placeholder">
         <h3>Payment Details Unavailable</h3>
@@ -20,7 +21,7 @@ const PaymentForm = ({ voyage, cabin, passengerCount, onSubmit, onBack }) => {
     );
   }
 
-  const totalPrice = cabin.price * passengerCount;
+  const totalPrice =  passengerCount;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,17 +48,29 @@ const PaymentForm = ({ voyage, cabin, passengerCount, onSubmit, onBack }) => {
       return;
     }
 
-    onSubmit({ ...paymentData, paymentMode });
+    setSuccess(true); // ✅ Show success message
+    console.log("Payment successfully submitted");
   };
+
+  if (success) {
+    return (
+      <div className="payment-success ">
+        <h2>✅ Payment Successful!</h2>
+        <p>Thank you for booking your voyage with us.</p>
+        {/* <button onClick={onBack}>Book Another</button> */}
+      </div>
+    );
+  }
+
 
   return (
     <div className="payment-details">
       <h3>Payment Information</h3>
 
       <div className="booking-summary">
-        <p><strong>Voyage:</strong> {voyage.title}</p>
-        <p><strong>Cabin:</strong> {cabin.type}</p>
-        <p><strong>Passengers:</strong> {passengerCount}</p>
+        <p><strong>Voyage:</strong> {voyages.title}</p>
+        <p><strong>Cabin:</strong> {}</p>
+        <p><strong>Passengers:</strong> {}</p>
         <p><strong>Total Price:</strong> ₹{totalPrice}</p>
       </div>
 

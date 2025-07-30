@@ -94,9 +94,9 @@ const Voyages = ({ voyages }) => {
           <Link to="/admin" className="action-button">
             🛠️ Admin
           </Link>
-          <Link to="/bookingsteps" className="action-button">
+          {/* <Link to="/bookingsteps" className="action-button">
             📘 Booking Steps
-          </Link>
+          </Link> */}
         </div>
       </section>
     </>

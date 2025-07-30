@@ -1,4 +1,4 @@
-// src/pages/BookingFlow.js
+
 import { useState } from 'react';
 import VoyageCard from '../components/VoyageCard';
 import PassengerForm from '../components/PassengerForm';
@@ -123,12 +123,17 @@ const BookingFlow = ({ voyages, currentUser, addBooking }) => {
         );
 
       case 3:
-        return (
-          <PaymentForm
-            onSubmit={handlePaymentSubmit}
-            onBack={() => setStep(2)}
-          />
-        );
+        case 3:
+  return (
+    <PaymentForm
+      voyages={selectedVoyage}
+      cabin={"Standard"} // or get it from user if it's dynamic
+      passengerCount={passengerData.length}
+      onSubmit={handlePaymentSubmit}
+      onBack={() => setStep(2)}
+    />
+  );
+
 
       case 4:
         return (
