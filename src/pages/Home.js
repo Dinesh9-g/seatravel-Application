@@ -21,7 +21,7 @@ const Home = ({ voyages }) => {
       title: "Andaman Adventure",
       duration: "7 nights",
       price: "$999",
-      link: "/voyages/andaman"
+      link: "/voyages"
     },
     {
       id: 2,
@@ -29,7 +29,7 @@ const Home = ({ voyages }) => {
       title: "Dolphin Discovery",
       duration: "5 nights",
       price: "$799",
-      link: "/voyages/dolphin-discovery"
+      link: "/voyages"
     },
     {
       id: 3,
@@ -37,7 +37,7 @@ const Home = ({ voyages }) => {
       title: "Sunset Luxury Cruise",
       duration: "3 nights",
       price: "$1299",
-      link: "/voyages/sunset-luxury"
+      link: "/voyages"
     }
   ];
 
@@ -50,7 +50,7 @@ const Home = ({ voyages }) => {
    
                   <Lottie animationData={anime} loop={true}
                 style={{ width: '400px', height: '300px' }}
- 
+
                      />
 
       </div>

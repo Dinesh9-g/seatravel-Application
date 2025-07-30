@@ -11,7 +11,7 @@ const Voyages = ({ voyages }) => {
     const durationNights = Number(voyage.duration);
     const voyagePrice = Number(voyage.price);
 
-    // Filter by duration
+  
     let durationMatch = true;
     if (durationFilter === '7') {
       durationMatch = durationNights <= 7;
@@ -21,7 +21,7 @@ const Voyages = ({ voyages }) => {
       durationMatch = durationNights > 14;
     }
 
-    // Filter by price
+    
     let priceMatch = true;
     if (priceFilter === '1000') {
       priceMatch = voyagePrice <= 1000;
