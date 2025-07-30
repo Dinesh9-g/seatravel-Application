@@ -75,15 +75,7 @@ const Home = ({ voyages }) => {
         </div>
       </section>
 
-      {/* <section className="popular-voyages">
-        <h2>Popular Voyages</h2>
-        <div className="voyage-list">
-          {featuredVoyages.map(voyage => (
-            <VoyageCard key={voyage.id} voyage={voyage} />
-          ))}
-        </div>
-        <Link to="/voyages" className="cta-button secondary">View All Voyages</Link>
-      </section> */}
+    
 
       <section className="benefits">
         <h2>Why Choose Us</h2>

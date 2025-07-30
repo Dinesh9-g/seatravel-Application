@@ -63,10 +63,10 @@ const Voyages = ({ voyages }) => {
             onChange={(e) => setPriceFilter(e.target.value)}
           >
             <option value="all">All Prices</option>
-            <option value="1000">Under $1000</option>
-            <option value="2000">Under $2000</option>
-            <option value="3000">Under $3000</option>
-            <option value="3000+">Above $3000</option>
+            <option value="1000">Under  ₹36666</option>
+            <option value="2000">Under  ₹46666</option>
+            <option value="3000">Under  ₹56666</option>
+            <option value="3000+">Above ₹66666</option>
           </select>
         </div>
 
