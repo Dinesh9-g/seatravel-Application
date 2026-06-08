@@ -4,9 +4,9 @@ const router = express.Router();
 const { db } = require('../database');
 
 // Get reviews for voyage
-router.get('/voyage/:voyageId', (req, res) => {
+router.get('/voyage/:voyageId', async (req, res) => {
   try {
-    const reviews = db.prepare(`
+    const reviews = await db.prepare(`
       SELECT r.*, u.name
       FROM reviews r
       JOIN users u ON r.userId = u.id
@@ -14,7 +14,7 @@ router.get('/voyage/:voyageId', (req, res) => {
       ORDER BY r.createdAt DESC
     `).all(req.params.voyageId);
 
-    const avgRating = db.prepare(`
+    const avgRating = await db.prepare(`
       SELECT AVG(rating) as avgRating, COUNT(*) as totalReviews
       FROM reviews
       WHERE voyageId = ?
@@ -27,11 +27,11 @@ router.get('/voyage/:voyageId', (req, res) => {
 });
 
 // Create review
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { bookingId, userId, voyageId, rating, comment } = req.body;
     
-    const result = db.prepare(`
+    const result = await db.prepare(`
       INSERT INTO reviews (bookingId, userId, voyageId, rating, comment)
       VALUES (?, ?, ?, ?, ?)
     `).run(bookingId, userId, voyageId, rating, comment);
@@ -43,11 +43,11 @@ router.post('/', (req, res) => {
 });
 
 // Update review
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { rating, comment } = req.body;
     
-    db.prepare('UPDATE reviews SET rating = ?, comment = ? WHERE id = ?').run(rating, comment, req.params.id);
+    await db.prepare('UPDATE reviews SET rating = ?, comment = ? WHERE id = ?').run(rating, comment, req.params.id);
 
     res.json({ message: 'Review updated successfully' });
   } catch (error) {
@@ -56,9 +56,9 @@ router.put('/:id', (req, res) => {
 });
 
 // Delete review
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
-    db.prepare('DELETE FROM reviews WHERE id = ?').run(req.params.id);
+    await db.prepare('DELETE FROM reviews WHERE id = ?').run(req.params.id);
     res.json({ message: 'Review deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

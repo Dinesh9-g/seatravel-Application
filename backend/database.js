@@ -1,119 +1,147 @@
 // backend/database.js
-const Database = require('better-sqlite3');
-const path = require('path');
+const mysql = require('mysql2/promise');
 
-// Create/open database
-const db = new Database(path.join(__dirname, 'seatravel.db'));
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  port: Number(process.env.DB_PORT || 3306),
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'root',
+  database: process.env.DB_NAME || 'seatravel',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
 
-// Enable foreign keys
-db.pragma('foreign_keys = ON');
+const db = {
+  prepare(sql) {
+    const normalize = (params) => (params.length > 1 ? params : params[0] ?? []);
 
-// Create tables
-const initDatabase = () => {
-  // Users table
-  db.exec(`
+    return {
+      async all(...params) {
+        const [rows] = await pool.execute(sql, normalize(params));
+        return rows;
+      },
+      async get(...params) {
+        const rows = await this.all(...params);
+        return rows[0];
+      },
+      async run(...params) {
+        const [result] = await pool.execute(sql, normalize(params));
+        return {
+          lastInsertRowid: result.insertId,
+          changes: result.affectedRows,
+          result,
+        };
+      },
+    };
+  },
+  async exec(sql) {
+    await pool.query(sql);
+  },
+};
+
+const initDatabase = async () => {
+  const databaseName = process.env.DB_NAME || 'seatravel';
+  await pool.query(`CREATE DATABASE IF NOT EXISTS \`${databaseName}\``);
+  await pool.query(`USE \`${databaseName}\``);
+
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      email TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL,
-      name TEXT NOT NULL,
-      phone TEXT,
-      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
+      name VARCHAR(255) NOT NULL,
+      phone VARCHAR(50) NULL,
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB
   `);
 
-  // Voyages table
-  db.exec(`
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS voyages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      description TEXT,
-      departure TEXT NOT NULL,
-      duration TEXT NOT NULL,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      description TEXT NULL,
+      departure VARCHAR(100) NOT NULL,
+      duration VARCHAR(100) NOT NULL,
       ports TEXT NOT NULL,
       basePrice DECIMAL(10,2) NOT NULL,
-      image TEXT,
-      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
+      image VARCHAR(255) NULL,
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB
   `);
 
-  // Cabins table
-  db.exec(`
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS cabins (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      voyageId INTEGER NOT NULL,
-      type TEXT NOT NULL,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      voyageId INT NOT NULL,
+      type VARCHAR(100) NOT NULL,
       price DECIMAL(10,2) NOT NULL,
-      available INTEGER NOT NULL,
-      maxOccupancy INTEGER NOT NULL,
+      available INT NOT NULL,
+      maxOccupancy INT NOT NULL,
       FOREIGN KEY (voyageId) REFERENCES voyages(id) ON DELETE CASCADE
-    )
+    ) ENGINE=InnoDB
   `);
 
-  // Bookings table
-  db.exec(`
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS bookings (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId INTEGER NOT NULL,
-      voyageId INTEGER NOT NULL,
-      cabinId INTEGER NOT NULL,
-      cabinType TEXT NOT NULL,
-      passengerCount INTEGER NOT NULL,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      userId INT NOT NULL,
+      voyageId INT NOT NULL,
+      cabinId INT NOT NULL,
+      cabinType VARCHAR(100) NOT NULL,
+      passengerCount INT NOT NULL,
       totalPrice DECIMAL(10,2) NOT NULL,
-      status TEXT DEFAULT 'Confirmed',
-      paymentMethod TEXT,
-      bookingDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      status VARCHAR(50) DEFAULT 'Confirmed',
+      paymentMethod VARCHAR(100) NULL,
+      bookingDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
       FOREIGN KEY (voyageId) REFERENCES voyages(id) ON DELETE CASCADE,
       FOREIGN KEY (cabinId) REFERENCES cabins(id) ON DELETE CASCADE
-    )
+    ) ENGINE=InnoDB
   `);
 
-  // Reviews table
-  db.exec(`
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS reviews (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      bookingId INTEGER NOT NULL,
-      userId INTEGER NOT NULL,
-      voyageId INTEGER NOT NULL,
-      rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
-      comment TEXT,
-      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      bookingId INT NOT NULL,
+      userId INT NOT NULL,
+      voyageId INT NOT NULL,
+      rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+      comment TEXT NULL,
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (bookingId) REFERENCES bookings(id) ON DELETE CASCADE,
       FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
       FOREIGN KEY (voyageId) REFERENCES voyages(id) ON DELETE CASCADE
-    )
+    ) ENGINE=InnoDB
   `);
 
-  // Saved bookings (wishlist) table
-  db.exec(`
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS savedBookings (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId INTEGER NOT NULL,
-      voyageId INTEGER NOT NULL,
-      savedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-      UNIQUE(userId, voyageId),
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      userId INT NOT NULL,
+      voyageId INT NOT NULL,
+      savedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE KEY unique_saved (userId, voyageId),
       FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
       FOREIGN KEY (voyageId) REFERENCES voyages(id) ON DELETE CASCADE
-    )
+    ) ENGINE=InnoDB
   `);
 
-  // Payments table
-  db.exec(`
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS payments (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      bookingId INTEGER NOT NULL,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      bookingId INT NOT NULL,
       amount DECIMAL(10,2) NOT NULL,
-      paymentMethod TEXT NOT NULL,
-      transactionId TEXT UNIQUE,
-      status TEXT DEFAULT 'Completed',
-      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      paymentMethod VARCHAR(100) NOT NULL,
+      transactionId VARCHAR(255) NULL UNIQUE,
+      status VARCHAR(50) DEFAULT 'Completed',
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (bookingId) REFERENCES bookings(id) ON DELETE CASCADE
-    )
+    ) ENGINE=InnoDB
   `);
 
-  console.log('Database initialized successfully');
+  console.log('Database initialized successfully on MySQL');
 };
 
 module.exports = { db, initDatabase };

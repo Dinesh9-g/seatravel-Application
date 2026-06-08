@@ -4,9 +4,9 @@ const router = express.Router();
 const { db } = require('../database');
 
 // Get all bookings
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const bookings = db.prepare(`
+    const bookings = await db.prepare(`
       SELECT b.*, u.email, u.name, v.title as voyageName
       FROM bookings b
       JOIN users u ON b.userId = u.id
@@ -21,9 +21,9 @@ router.get('/', (req, res) => {
 });
 
 // Get bookings for user
-router.get('/user/:userId', (req, res) => {
+router.get('/user/:userId', async (req, res) => {
   try {
-    const bookings = db.prepare(`
+    const bookings = await db.prepare(`
       SELECT b.*, v.title as voyageName
       FROM bookings b
       JOIN voyages v ON b.voyageId = v.id
@@ -38,17 +38,17 @@ router.get('/user/:userId', (req, res) => {
 });
 
 // Create booking
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { userId, voyageId, cabinId, cabinType, passengerCount, totalPrice, paymentMethod } = req.body;
     
-    const result = db.prepare(`
+    const result = await db.prepare(`
       INSERT INTO bookings (userId, voyageId, cabinId, cabinType, passengerCount, totalPrice, paymentMethod, status)
       VALUES (?, ?, ?, ?, ?, ?, ?, 'Confirmed')
     `).run(userId, voyageId, cabinId, cabinType, passengerCount, totalPrice, paymentMethod);
 
     // Update cabin availability
-    db.prepare('UPDATE cabins SET available = available - 1 WHERE id = ?').run(cabinId);
+    await db.prepare('UPDATE cabins SET available = available - 1 WHERE id = ?').run(cabinId);
 
     res.json({ id: result.lastInsertRowid, message: 'Booking created successfully' });
   } catch (error) {
@@ -57,11 +57,11 @@ router.post('/', (req, res) => {
 });
 
 // Update booking status
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { status } = req.body;
     
-    db.prepare('UPDATE bookings SET status = ? WHERE id = ?').run(status, req.params.id);
+    await db.prepare('UPDATE bookings SET status = ? WHERE id = ?').run(status, req.params.id);
 
     res.json({ message: 'Booking updated successfully' });
   } catch (error) {
@@ -70,16 +70,16 @@ router.put('/:id', (req, res) => {
 });
 
 // Cancel booking
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
-    const booking = db.prepare('SELECT cabinId FROM bookings WHERE id = ?').get(req.params.id);
+    const booking = await db.prepare('SELECT cabinId FROM bookings WHERE id = ?').get(req.params.id);
     
     if (booking) {
       // Restore cabin availability
-      db.prepare('UPDATE cabins SET available = available + 1 WHERE id = ?').run(booking.cabinId);
+      await db.prepare('UPDATE cabins SET available = available + 1 WHERE id = ?').run(booking.cabinId);
     }
 
-    db.prepare('DELETE FROM bookings WHERE id = ?').run(req.params.id);
+    await db.prepare('DELETE FROM bookings WHERE id = ?').run(req.params.id);
     res.json({ message: 'Booking cancelled successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

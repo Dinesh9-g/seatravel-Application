@@ -21,7 +21,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Initialize database
-initDatabase();
+initDatabase().catch((error) => {
+  console.error('Database initialization failed:', error);
+  process.exit(1);
+});
 
 // Routes
 app.use('/api/voyages', voyagesRoutes);
@@ -34,10 +37,10 @@ app.get('/api/health', (req, res) => {
 });
 
 // Seed initial data (optional - only run once)
-app.post('/api/seed', (req, res) => {
+app.post('/api/seed', async (req, res) => {
   try {
     // Check if data already exists
-    const count = db.prepare('SELECT COUNT(*) as count FROM voyages').get();
+    const count = await db.prepare('SELECT COUNT(*) as count FROM voyages').get();
     
     if (count.count === 0) {
       // Insert sample voyages
@@ -80,12 +83,12 @@ app.post('/api/seed', (req, res) => {
         }
       ];
 
-      voyages.forEach(voyage => {
+      for (const voyage of voyages) {
         const insertVoyage = db.prepare(`
           INSERT INTO voyages (title, description, departure, duration, ports, basePrice, image)
           VALUES (?, ?, ?, ?, ?, ?, ?)
         `);
-        const result = insertVoyage.run(
+        const result = await insertVoyage.run(
           voyage.title, 
           voyage.description, 
           voyage.departure, 
@@ -105,13 +108,13 @@ app.post('/api/seed', (req, res) => {
           { type: 'Suite', price: voyage.basePrice + 1700, available: 2, maxOccupancy: 4 }
         ];
 
-        cabins.forEach(cabin => {
-          db.prepare(`
+        for (const cabin of cabins) {
+          await db.prepare(`
             INSERT INTO cabins (voyageId, type, price, available, maxOccupancy)
             VALUES (?, ?, ?, ?, ?)
           `).run(voyageId, cabin.type, cabin.price, cabin.available, cabin.maxOccupancy);
-        });
-      });
+        }
+      }
 
       res.json({ message: 'Database seeded successfully with 4 voyages and cabins' });
     } else {
@@ -132,7 +135,7 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`✅ Backend server running on http://localhost:${PORT}`);
   console.log(`📊 API endpoints available at http://localhost:${PORT}/api`);
-  console.log(`💾 Database: seatravel.db`);
+  console.log(`💾 Database: ${process.env.DB_NAME || 'seatravel'} on MySQL`);
   console.log(`\n📝 Available routes:`);
   console.log(`   GET  /api/voyages - Get all voyages`);
   console.log(`   GET  /api/voyages/:id - Get voyage details`);

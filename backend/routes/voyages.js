@@ -4,9 +4,9 @@ const router = express.Router();
 const { db } = require('../database');
 
 // Get all voyages
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const voyages = db.prepare(`
+    const voyages = await db.prepare(`
       SELECT v.*, 
              GROUP_CONCAT(c.id || ':' || c.type || ':' || c.price || ':' || c.available || ':' || c.maxOccupancy, '|') as cabinsData
       FROM voyages v
@@ -30,10 +30,10 @@ router.get('/', (req, res) => {
 });
 
 // Get single voyage
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const voyage = db.prepare('SELECT * FROM voyages WHERE id = ?').get(req.params.id);
-    const cabins = db.prepare('SELECT * FROM cabins WHERE voyageId = ?').all(req.params.id);
+    const voyage = await db.prepare('SELECT * FROM voyages WHERE id = ?').get(req.params.id);
+    const cabins = await db.prepare('SELECT * FROM cabins WHERE voyageId = ?').all(req.params.id);
     
     if (!voyage) {
       return res.status(404).json({ error: 'Voyage not found' });
@@ -50,11 +50,11 @@ router.get('/:id', (req, res) => {
 });
 
 // Create voyage
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { title, description, departure, duration, ports, basePrice, image } = req.body;
     
-    const result = db.prepare(`
+    const result = await db.prepare(`
       INSERT INTO voyages (title, description, departure, duration, ports, basePrice, image)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(title, description, departure, duration, JSON.stringify(ports), basePrice, image);
@@ -66,11 +66,11 @@ router.post('/', (req, res) => {
 });
 
 // Update voyage
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { title, description, departure, duration, ports, basePrice, image } = req.body;
     
-    db.prepare(`
+    await db.prepare(`
       UPDATE voyages 
       SET title = ?, description = ?, departure = ?, duration = ?, ports = ?, basePrice = ?, image = ?
       WHERE id = ?
@@ -83,9 +83,9 @@ router.put('/:id', (req, res) => {
 });
 
 // Delete voyage
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
-    db.prepare('DELETE FROM voyages WHERE id = ?').run(req.params.id);
+    await db.prepare('DELETE FROM voyages WHERE id = ?').run(req.params.id);
     res.json({ message: 'Voyage deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
