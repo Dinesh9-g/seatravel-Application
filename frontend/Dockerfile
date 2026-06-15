@@ -1,23 +1,26 @@
 # -------------------------
 # STAGE 1: BUILD
 # -------------------------
-FROM node:18-alpine AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /app
 
 COPY package*.json ./
 
-# install ALL dependencies (IMPORTANT)
-RUN npm install
+# IMPORTANT: install ALL deps (not production only)
+RUN npm install --no-audit --no-fund
 
 COPY . .
 
-# build React app (if CRA or Vite)
+# FIX permissions issue (IMPORTANT)
+RUN chmod -R 755 node_modules/.bin
+
+# build React app
 RUN npm run build
 
 
 # -------------------------
-# STAGE 2: PRODUCTION (Nginx)
+# STAGE 2: PRODUCTION (NGINX)
 # -------------------------
 FROM nginx:alpine
 
